@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity
     private DrawingView drawView;
     private ImageButton currPaint;
 
-
     //sizes
     private float smallBrush, mediumBrush, largeBrush;
 
@@ -81,9 +80,6 @@ public class MainActivity extends AppCompatActivity
             if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
 
             } else {
 
@@ -92,10 +88,6 @@ public class MainActivity extends AppCompatActivity
                 ActivityCompat.requestPermissions(MainActivity.this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         2909);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         }
     }
@@ -350,14 +342,7 @@ public class MainActivity extends AppCompatActivity
             color1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //set erase false
-                    drawView.setErase(false);
-                    drawView.setPaintAlpha(100);
-                    drawView.setBrushSize(drawView.getLastBrushSize());
-                    if(v!=currPaint){
-                        String color = v.getTag().toString();
-                        drawView.setColor(color);
-                    }
+                    paintClicked(v);
                     colorDialog.dismiss();
                 }
             });
@@ -365,15 +350,8 @@ public class MainActivity extends AppCompatActivity
             color2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //set erase false
-                    drawView.setErase(false);
-                    drawView.setPaintAlpha(100);
-                    drawView.setBrushSize(drawView.getLastBrushSize());
 
-                    if(v!=currPaint){
-                        String color = v.getTag().toString();
-                        drawView.setColor(color);
-                    }
+                    paintClicked(v);
                     colorDialog.dismiss();
                 }
             });
@@ -388,21 +366,13 @@ public class MainActivity extends AppCompatActivity
 
     public void paintClicked(View view) {
 
-        //use chosen color
-
-        //set erase false
         drawView.setErase(false);
         drawView.setPaintAlpha(100);
         drawView.setBrushSize(drawView.getLastBrushSize());
 
         if(view!=currPaint){
-            ImageButton imgView = (ImageButton)view;
             String color = view.getTag().toString();
             drawView.setColor(color);
-            //update ui
-            imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
-            currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
-            currPaint=(ImageButton)view;
         }
     }
 
