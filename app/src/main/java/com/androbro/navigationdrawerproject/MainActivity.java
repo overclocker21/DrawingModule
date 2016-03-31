@@ -18,12 +18,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +33,11 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private Dialog dialog;
     //custom drawing view
     private DrawingView drawView;
     private ImageButton currPaint;
+
 
     //sizes
     private float smallBrush, mediumBrush, largeBrush;
@@ -59,9 +61,9 @@ public class MainActivity extends AppCompatActivity
         //get drawing view
         drawView = (DrawingView)findViewById(R.id.drawing);
 
-        //get the palette and first color button
-        RelativeLayout paintLayout = (RelativeLayout)findViewById(R.id.colors);
-        currPaint = (ImageButton)paintLayout.getChildAt(0);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        final View dialogView = inflater.inflate(R.layout.color_picker, null);
+        currPaint = (ImageButton)dialogView.findViewById(R.id.color1);
         currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 
         //sizes from dimensions
@@ -337,6 +339,63 @@ public class MainActivity extends AppCompatActivity
             saveDialog.show();
 
 
+        } else if (id == R.id.pick_color) {
+
+            //switch to erase - choose size
+            final Dialog colorDialog = new Dialog(this);
+            colorDialog.setTitle("Pick a color:");
+            colorDialog.setContentView(R.layout.color_picker);
+
+            //listen for clicks on size buttons
+            ImageButton smallBtn = (ImageButton)colorDialog.findViewById(R.id.color1);
+            ImageButton buttonTwo = (ImageButton)colorDialog.findViewById(R.id.color2);
+
+            smallBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //set erase false
+                    drawView.setErase(false);
+                    drawView.setPaintAlpha(100);
+                    drawView.setBrushSize(drawView.getLastBrushSize());
+
+                    if(v!=currPaint){
+                        ImageButton imgView = (ImageButton)v;
+                        String color = v.getTag().toString();
+                        drawView.setColor(color);
+                        //update ui
+                        imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+                        currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
+                        currPaint=(ImageButton)v;
+                    }
+                    colorDialog.dismiss();
+                }
+
+            });
+
+            buttonTwo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //set erase false
+                    drawView.setErase(false);
+                    drawView.setPaintAlpha(100);
+                    drawView.setBrushSize(drawView.getLastBrushSize());
+
+                    if(v!=currPaint){
+                        ImageButton imgView = (ImageButton)v;
+                        String color = v.getTag().toString();
+                        drawView.setColor(color);
+                        //update ui
+                        imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+                        currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
+                        currPaint=(ImageButton)v;
+
+                    }
+                    colorDialog.dismiss();
+                }
+
+            });
+
+            colorDialog.show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
