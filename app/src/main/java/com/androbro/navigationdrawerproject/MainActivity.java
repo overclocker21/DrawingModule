@@ -33,7 +33,6 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Dialog dialog;
     //custom drawing view
     private DrawingView drawView;
     private ImageButton currPaint;
@@ -62,9 +61,8 @@ public class MainActivity extends AppCompatActivity
         drawView = (DrawingView)findViewById(R.id.drawing);
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        final View dialogView = inflater.inflate(R.layout.color_picker, null);
+        View dialogView = inflater.inflate(R.layout.color_picker, null);
         currPaint = (ImageButton)dialogView.findViewById(R.id.color1);
-        currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 
         //sizes from dimensions
         smallBrush = getResources().getInteger(R.integer.small_size);
@@ -345,34 +343,26 @@ public class MainActivity extends AppCompatActivity
             final Dialog colorDialog = new Dialog(this);
             colorDialog.setTitle("Pick a color:");
             colorDialog.setContentView(R.layout.color_picker);
-
             //listen for clicks on size buttons
-            ImageButton smallBtn = (ImageButton)colorDialog.findViewById(R.id.color1);
-            ImageButton buttonTwo = (ImageButton)colorDialog.findViewById(R.id.color2);
+            ImageButton color1 = (ImageButton)colorDialog.findViewById(R.id.color1);
+            ImageButton color2 = (ImageButton)colorDialog.findViewById(R.id.color2);
 
-            smallBtn.setOnClickListener(new View.OnClickListener() {
+            color1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //set erase false
                     drawView.setErase(false);
                     drawView.setPaintAlpha(100);
                     drawView.setBrushSize(drawView.getLastBrushSize());
-
                     if(v!=currPaint){
-                        ImageButton imgView = (ImageButton)v;
                         String color = v.getTag().toString();
                         drawView.setColor(color);
-                        //update ui
-                        imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
-                        currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
-                        currPaint=(ImageButton)v;
                     }
                     colorDialog.dismiss();
                 }
-
             });
 
-            buttonTwo.setOnClickListener(new View.OnClickListener() {
+            color2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //set erase false
@@ -381,18 +371,11 @@ public class MainActivity extends AppCompatActivity
                     drawView.setBrushSize(drawView.getLastBrushSize());
 
                     if(v!=currPaint){
-                        ImageButton imgView = (ImageButton)v;
                         String color = v.getTag().toString();
                         drawView.setColor(color);
-                        //update ui
-                        imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
-                        currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
-                        currPaint=(ImageButton)v;
-
                     }
                     colorDialog.dismiss();
                 }
-
             });
 
             colorDialog.show();
